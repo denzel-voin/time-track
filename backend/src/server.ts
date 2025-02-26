@@ -8,9 +8,26 @@ app.use(express.json());
 
 const prisma = new PrismaClient();
 
+// Получение всех задач
+app.get('/tasks', async (req, res) => {
+    try {
+        const tasks = await prisma.task.findMany();
+        res.json(tasks);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Ошибка при получении задач' });
+    }
+});
+
+// Создание задачи
 app.post('/tasks', async (req, res) => {
-    const task = await prisma.task.create({ data: req.body });
-    res.json(task);
+    try {
+        const task = await prisma.task.create({ data: req.body });
+        res.json(task);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Ошибка при создании задачи' });
+    }
 });
 
 const PORT = process.env.PORT || 5000;
